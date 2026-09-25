@@ -1,0 +1,29 @@
+{
+  "name": "marketlink-egreen-basket",
+  "version": "1.0.0",
+  "description": "MarketLink eGreen Basket - Local Farmers Market Platform with MongoDB & Vercel Serverless Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node scripts/seed-mongo.js"
+  },
+  "keywords": [
+    "farmers-market",
+    "organic-food",
+    "mongodb",
+    "vercel",
+    "serverless",
+    "full-stack"
+  ],
+  "author": "MarketLink Team",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^6.8.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  }
+}

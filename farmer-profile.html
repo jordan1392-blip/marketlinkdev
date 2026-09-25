@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Profile | MarketLink – eGreen Basket</title>
+    <meta name="description" content="View farmer stall details, weekly organic stock, pickup timings, and customer reviews.">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Leaflet CSS for Mini Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <header id="main-navbar"></header>
+
+    <!-- Farmer Profile Hero -->
+    <section class="py-5 bg-white border-bottom">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-3 small">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="farmers.html">Farmers</a></li>
+                    <li class="breadcrumb-item active" id="breadcrumb-farmer-name">Farmer Profile</li>
+                </ol>
+            </nav>
+
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-4">
+                        <img id="farmer-avatar" src="" alt="Farmer" class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #2e7d32;">
+                        <div>
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                                <h1 class="h2 fw-bold text-dark mb-0" id="farmer-stall-title">Loading Stall...</h1>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                    <i class="bi bi-patch-check-fill me-1"></i> Verified Stall
+                                </span>
+                            </div>
+                            <p class="text-muted mb-2">
+                                Operated by <strong class="text-dark" id="farmer-contact-name">-</strong>
+                            </p>
+                            <div class="d-flex flex-wrap align-items-center gap-3">
+                                <div id="farmer-rating-stars"></div>
+                                <span class="text-muted small" id="farmer-review-count">(0 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 text-lg-end">
+                    <button class="btn btn-outline-danger btn-lg shadow-sm" id="btn-fav-toggle" onclick="toggleFavoriteFarmer()">
+                        <i class="bi bi-heart me-1"></i> <span id="fav-btn-text">Add to Favorites</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Area -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Left Details & Mini Map Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Stall Information Card -->
+                    <div class="card p-4 mb-4 shadow-sm">
+                        <h5 class="fw-bold mb-3 border-bottom pb-2 text-dark">
+                            <i class="bi bi-info-circle text-success me-2"></i> Stall Information
+                        </h5>
+                        <ul class="list-unstyled mb-0 d-flex flex-column gap-3 small">
+                            <li>
+                                <div class="text-muted mb-1"><i class="bi bi-shop me-1 text-success"></i> Affiliated Market</div>
+                                <strong class="text-dark" id="farmer-market-name">-</strong>
+                            </li>
+                            <li>
+                                <div class="text-muted mb-1"><i class="bi bi-calendar3 me-1 text-success"></i> Operating Days</div>
+                                <strong class="text-dark" id="farmer-operating-days">-</strong>
+                            </li>
+                            <li>
+                                <div class="text-muted mb-1"><i class="bi bi-clock me-1 text-success"></i> Pre-order Pickup Window</div>
+                                <strong class="text-dark" id="farmer-pickup-time">-</strong>
+                            </li>
+                            <li>
+                                <div class="text-muted mb-1"><i class="bi bi-geo-alt me-1 text-danger"></i> Farm / Stall Address</div>
+                                <span class="text-dark" id="farmer-address">-</span>
+                            </li>
+                            <li>
+                                <div class="text-muted mb-1"><i class="bi bi-telephone me-1 text-primary"></i> Contact Number</div>
+                                <span class="text-dark fw-bold" id="farmer-phone">-</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Mini Leaflet Map -->
+                    <div class="card p-3 mb-4 shadow-sm">
+                        <h6 class="fw-bold mb-2 text-dark">
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i> Stall Location Map
+                        </h6>
+                        <div id="farmer-mini-map" style="height: 220px; border-radius: 12px; border: 1px solid #e9e4dc;"></div>
+                    </div>
+
+                    <!-- About / Bio -->
+                    <div class="card p-4 shadow-sm">
+                        <h6 class="fw-bold mb-2 text-dark">About This Farm</h6>
+                        <p class="text-muted small mb-0" id="farmer-bio-text">-</p>
+                    </div>
+                </div>
+
+                <!-- Right Main Column: Weekly Stock & Products & Reviews -->
+                <div class="col-lg-8">
+                    <!-- Current Weekly Stock Table -->
+                    <div class="card p-4 mb-4 shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0 text-dark">
+                                <i class="bi bi-box-seam text-success me-2"></i> Current Weekly Stock
+                            </h5>
+                            <span class="badge bg-light text-dark border">Updated for this week</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr class="small text-muted">
+                                        <th>Produce Item</th>
+                                        <th>Price (PKR)</th>
+                                        <th>Available Stock</th>
+                                        <th class="text-end">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="weekly-stock-tbody">
+                                    <!-- Dynamically loaded -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0 text-dark">
+                            <i class="bi bi-basket text-success me-2"></i> Products Available for Pre-Order
+                        </h5>
+                    </div>
+                    <div class="row g-3 mb-5" id="farmer-products-grid">
+                        <!-- Dynamically loaded -->
+                    </div>
+
+                    <!-- Customer Reviews Section -->
+                    <div class="card p-4 shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h5 class="fw-bold mb-0 text-dark">
+                                    <i class="bi bi-star-fill text-warning me-2"></i> Customer Reviews & Ratings
+                                </h5>
+                                <small class="text-muted">Verified feedback from pre-order customers</small>
+                            </div>
+                            <button class="btn btn-outline-primary btn-sm" onclick="openAddReviewModal()">
+                                <i class="bi bi-pencil me-1"></i> Leave a Review
+                            </button>
+                        </div>
+
+                        <div class="d-flex flex-column gap-3" id="farmer-reviews-list">
+                            <!-- Dynamically loaded -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leave Review Modal -->
+    <div class="modal fade" id="reviewModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-bold text-dark">Review This Farmer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form onsubmit="submitFarmerReview(event)">
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Rating (1 to 5 Stars)</label>
+                            <select id="reviewRatingSelect" class="form-select" required>
+                                <option value="5">⭐⭐⭐⭐⭐ 5 - Exceptional Quality</option>
+                                <option value="4">⭐⭐⭐⭐ 4 - Great Fresh Produce</option>
+                                <option value="3">⭐⭐⭐ 3 - Average Experience</option>
+                                <option value="2">⭐⭐ 2 - Below Expectations</option>
+                                <option value="1">⭐ 1 - Poor Quality</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Your Comment / Experience</label>
+                            <textarea id="reviewCommentText" rows="4" class="form-control" placeholder="Describe the freshness, pickup convenience, and stall service..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Submit Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Footer -->
+    <footer id="main-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/demo-data.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/chatbot.js"></script>
+
+    <script>
+        let currentFarmerId = null;
+        let currentFarmer = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            App.renderNavbar('farmers');
+            App.renderFooter();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            currentFarmerId = urlParams.get('id') || 'fm-1';
+
+            currentFarmer = await DB.getFarmerById(currentFarmerId);
+            if (!currentFarmer) {
+                alert('Farmer not found');
+                window.location.href = 'farmers.html';
+                return;
+            }
+
+            // Populate Farmer Details
+            document.getElementById('breadcrumb-farmer-name').textContent = currentFarmer.stall_name;
+            document.getElementById('farmer-stall-title').textContent = currentFarmer.stall_name;
+            document.getElementById('farmer-contact-name').textContent = currentFarmer.contact_person || currentFarmer.farmer_name;
+            document.getElementById('farmer-avatar').src = currentFarmer.image_url;
+            document.getElementById('farmer-rating-stars').innerHTML = App.renderStars(currentFarmer.rating);
+            document.getElementById('farmer-review-count').textContent = `(${currentFarmer.reviews_count || 30}+ reviews)`;
+
+            // Sidebar info
+            const market = await DB.getMarketById(currentFarmer.market_id);
+            document.getElementById('farmer-market-name').textContent = market ? market.name : 'All Markets';
+            document.getElementById('farmer-operating-days').textContent = currentFarmer.operating_days || 'Friday, Saturday';
+            document.getElementById('farmer-pickup-time').textContent = `${currentFarmer.pickup_start || '09:00'} - ${currentFarmer.pickup_end || '17:00'}`;
+            document.getElementById('farmer-address').textContent = currentFarmer.address;
+            document.getElementById('farmer-phone').textContent = currentFarmer.phone;
+            document.getElementById('farmer-bio-text').textContent = currentFarmer.bio || 'Local grower dedicated to fresh quality harvest.';
+
+            // Mini Map
+            initMiniMap(currentFarmer.latitude || 33.7297, currentFarmer.longitude || 73.0746, currentFarmer.stall_name);
+
+            // Check favorite status
+            await checkFavStatus();
+
+            // Load Weekly Stock & Products
+            await loadFarmerProducts();
+
+            // Load Reviews
+            await loadFarmerReviews();
+        });
+
+        function initMiniMap(lat, lng, name) {
+            if (!window.L || !document.getElementById('farmer-mini-map')) return;
+            const map = L.map('farmer-mini-map').setView([lat, lng], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
+
+            const marker = L.marker([lat, lng]).addTo(map);
+            marker.bindPopup(`<strong>${name}</strong><br>Pickup Stall Point`).openPopup();
+        }
+
+        async function checkFavStatus() {
+            const user = Auth.getCurrentUser();
+            if (!user) return;
+            const isFav = await DB.isFavorite(user.id, 'farmer', currentFarmerId);
+            const btn = document.getElementById('btn-fav-toggle');
+            const txt = document.getElementById('fav-btn-text');
+            if (isFav) {
+                btn.className = 'btn btn-danger btn-lg shadow-sm';
+                txt.textContent = 'Saved in Favorites';
+            } else {
+                btn.className = 'btn btn-outline-danger btn-lg shadow-sm';
+                txt.textContent = 'Add to Favorites';
+            }
+        }
+
+        async function toggleFavoriteFarmer() {
+            const user = Auth.getCurrentUser();
+            if (!user) {
+                App.showToast('Please login to save favorite farmers.', 'info');
+                return;
+            }
+            const isSaved = await DB.toggleFavorite(user.id, 'farmer', currentFarmerId);
+            App.showToast(isSaved ? 'Saved to favorites!' : 'Removed from favorites.', 'success');
+            await checkFavStatus();
+        }
+
+        async function loadFarmerProducts() {
+            const products = await DB.getProductsByFarmer(currentFarmerId);
+            const stockTbody = document.getElementById('weekly-stock-tbody');
+            const prodGrid = document.getElementById('farmer-products-grid');
+
+            if (products.length === 0) {
+                if (stockTbody) stockTbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">No stock listed currently.</td></tr>';
+                if (prodGrid) prodGrid.innerHTML = '<div class="col-12 text-center py-4 text-muted">No products available at this time.</div>';
+                return;
+            }
+
+            // Populate Table
+            let tableHtml = '';
+            products.forEach(p => {
+                const isSoldOut = p.status === 'sold_out' || p.stock_quantity <= 0;
+                tableHtml += `
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="${p.image_url}" alt="${p.name}" class="rounded-2" style="width: 38px; height: 38px; object-fit: cover;">
+                            <strong>${p.name}</strong>
+                        </div>
+                    </td>
+                    <td class="fw-bold text-success">${App.formatCurrency(p.price)} <small class="text-muted">/${p.unit}</small></td>
+                    <td>
+                        <span class="badge ${isSoldOut ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success'}">
+                            ${isSoldOut ? 'Sold Out' : p.stock_quantity + ' ' + p.unit + ' available'}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-primary" onclick="Cart.addItem('${p.id}', 1)" ${isSoldOut ? 'disabled' : ''}>
+                            <i class="bi bi-cart-plus"></i> Add
+                        </button>
+                    </td>
+                </tr>
+                `;
+            });
+            if (stockTbody) stockTbody.innerHTML = tableHtml;
+
+            // Populate Grid
+            let gridHtml = '';
+            products.forEach(p => {
+                const isSoldOut = p.status === 'sold_out' || p.stock_quantity <= 0;
+                gridHtml += `
+                <div class="col-md-6 col-lg-4">
+                    <div class="product-card card-hover-lift h-100">
+                        <div class="product-img-wrapper" style="height: 160px;">
+                            <img src="${p.image_url}" alt="${p.name}">
+                        </div>
+                        <div class="product-body p-3">
+                            <h6 class="product-title mb-1">
+                                <a href="product-details.html?id=${p.id}" class="text-dark text-decoration-none">${p.name}</a>
+                            </h6>
+                            <small class="text-muted mb-2 d-block">${p.stock_quantity} ${p.unit} in stock</small>
+                            <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">${App.formatCurrency(p.price)}</span>
+                                <button class="btn btn-primary btn-sm px-3" onclick="Cart.addItem('${p.id}', 1)" ${isSoldOut ? 'disabled' : ''}>
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+            if (prodGrid) prodGrid.innerHTML = gridHtml;
+        }
+
+        async function loadFarmerReviews() {
+            const container = document.getElementById('farmer-reviews-list');
+            if (!container) return;
+
+            const reviews = await DB.getReviews({ farmer_id: currentFarmerId });
+            if (reviews.length === 0) {
+                container.innerHTML = '<p class="text-muted small">No reviews for this farmer yet. Be the first to leave one!</p>';
+                return;
+            }
+
+            let html = '';
+            reviews.forEach(r => {
+                html += `
+                <div class="p-3 bg-light rounded-3 border">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 13px; font-weight: bold;">
+                                ${r.customer_name ? r.customer_name[0] : 'C'}
+                            </div>
+                            <strong class="text-dark small">${r.customer_name}</strong>
+                        </div>
+                        <div>${App.renderStars(r.rating)}</div>
+                    </div>
+                    <p class="small text-secondary mb-1">"${r.comment}"</p>
+                    <small class="text-muted" style="font-size: 0.75rem;">${r.created_at}</small>
+                </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function openAddReviewModal() {
+            const user = Auth.getCurrentUser();
+            if (!user) {
+                App.showToast('Please login to leave a review.', 'info');
+                return;
+            }
+            const modal = new bootstrap.Modal(document.getElementById('reviewModal'));
+            modal.show();
+        }
+
+        async function submitFarmerReview(e) {
+            e.preventDefault();
+            const user = Auth.getCurrentUser();
+            const rating = parseInt(document.getElementById('reviewRatingSelect').value, 10);
+            const commentInput = document.getElementById('reviewCommentText');
+            const comment = commentInput.value.trim();
+
+            if (comment.length < 10) {
+                App.showToast('Please write a review comment with at least 10 characters.', 'error');
+                commentInput.focus();
+                return;
+            }
+
+            await DB.addReview({
+                customer_id: user.id,
+                customer_name: user.name,
+                farmer_id: currentFarmerId,
+                rating: rating,
+                comment: comment
+            });
+
+            App.showToast('Review submitted successfully! Thank you.', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+            await loadFarmerReviews();
+        }
+    </script>
+</body>
+</html>

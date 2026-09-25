@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Produce Marketplace | MarketLink – eGreen Basket</title>
+    <meta name="description" content="Browse fresh farm harvest. Filter by categories, price in PKR, farmer, and market. Reserve online, pay cash at pickup.">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <header id="main-navbar"></header>
+
+    <!-- Page Header Banner -->
+    <section class="py-4 bg-white border-bottom">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2 small">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Products</li>
+                </ol>
+            </nav>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <h1 class="h2 fw-bold text-dark mb-1">Fresh Farm Marketplace</h1>
+                    <p class="text-muted mb-0">Direct from local growers. Check live stock and add items to your pickup basket.</p>
+                </div>
+                <div>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fs-6" id="product-count-badge">
+                        Loading Products...
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Pills Navigation -->
+    <section class="py-3 bg-light border-bottom">
+        <div class="container">
+            <div class="d-flex align-items-center gap-2 overflow-x-auto py-1" id="category-pills-container" style="white-space: nowrap;">
+                <!-- Category buttons injected via js/products.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Marketplace Section -->
+    <section class="py-4">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Filters Sidebar -->
+                <div class="col-lg-3">
+                    <div class="card p-4 border shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-funnel me-1 text-success"></i> Filters</h5>
+                            <button class="btn btn-link btn-sm text-decoration-none p-0 text-success fw-semibold" onclick="ProductsView.resetFilters()">
+                                Reset
+                            </button>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-muted">Search Products</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" id="productSearchInput" class="form-control bg-light border-start-0" placeholder="Search products...">
+                            </div>
+                        </div>
+
+                        <!-- Price Range Filter -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label small fw-bold text-muted mb-0">Max Price (PKR)</label>
+                                <span class="fw-bold text-success small" id="priceRangeVal">Rs. 3,500</span>
+                            </div>
+                            <input type="range" class="form-range" id="priceRangeSlider" min="50" max="3500" step="50" value="3500">
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>Rs. 50</span>
+                                <span>Rs. 3,500</span>
+                            </div>
+                        </div>
+
+                        <!-- Filter by Farmer -->
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-muted">Filter by Farmer</label>
+                            <select id="filterFarmerSelect" class="form-select bg-light">
+                                <option value="all">All Farmers</option>
+                            </select>
+                        </div>
+
+                        <!-- Filter by Market -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted">Filter by Market</label>
+                            <select id="filterMarketSelect" class="form-select bg-light">
+                                <option value="all">All Markets</option>
+                            </select>
+                        </div>
+
+                        <!-- Cash at Pickup Reminder Box -->
+                        <div class="cash-pickup-notice mt-4 small">
+                            <i class="bi bi-info-circle-fill me-1"></i>
+                            <strong>No Online Payment Needed</strong><br>
+                            Reserve your produce now and pay in person when you collect your basket at the market stall.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Catalog Grid -->
+                <div class="col-lg-9">
+                    <div class="row g-3" id="products-grid">
+                        <!-- Dynamically populated via js/products.js -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Footer -->
+    <footer id="main-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/demo-data.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/chatbot.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            App.renderNavbar('products');
+            App.renderFooter();
+            ProductsView.init();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | MarketLink – eGreen Basket</title>
+    <meta name="description" content="Create a new MarketLink customer or farmer account to join our local food community.">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+    <!-- Main Navigation Bar -->
+    <header id="main-navbar"></header>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-7">
+                <div class="card p-4 p-md-5 border-0 shadow-lg" style="border-radius: 20px;">
+                    <div class="text-center mb-4">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-success-subtle text-success p-3 rounded-circle mb-3">
+                            <i class="bi bi-person-plus-fill fs-1"></i>
+                        </div>
+                        <h2 class="fw-bold text-dark mb-1">Create an Account</h2>
+                        <p class="text-muted small">Join MarketLink to pre-order fresh produce or list your farm stall.</p>
+                    </div>
+
+                    <!-- Role Switcher Tabs -->
+                    <ul class="nav nav-pills nav-fill mb-4 p-1 bg-light rounded-3" id="registerTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold py-2" id="customer-tab" data-bs-toggle="pill" data-bs-target="#customer-form-pane" type="button" role="tab">
+                                <i class="bi bi-basket me-1"></i> Customer Registration
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold py-2" id="farmer-tab" data-bs-toggle="pill" data-bs-target="#farmer-form-pane" type="button" role="tab">
+                                <i class="bi bi-shop me-1"></i> Farmer Stall Registration
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="registerTabsContent">
+                        <!-- Customer Registration Form -->
+                        <div class="tab-pane fade show active" id="customer-form-pane" role="tabpanel">
+                            <form id="customerForm" novalidate onsubmit="handleCustomerRegister(event)">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Full Name <span class="text-danger">*</span></label>
+                                        <input type="text" id="custName" class="form-control bg-light" placeholder="e.g. Sara Danish" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Contact Number <span class="text-danger">*</span></label>
+                                        <input type="tel" id="custPhone" class="form-control bg-light" placeholder="03001234567 or +92 300 1234567" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small fw-bold text-dark">Email Address <span class="text-danger">*</span></label>
+                                        <input type="email" id="custEmail" class="form-control bg-light" placeholder="name@example.com" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small fw-bold text-dark">Residential Address <span class="text-danger">*</span></label>
+                                        <input type="text" id="custAddress" class="form-control bg-light" placeholder="House / Apartment, Street, City (min 8 chars)" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Password <span class="text-danger">*</span></label>
+                                        <input type="password" id="custPassword" class="form-control bg-light" placeholder="Min 6 characters" minlength="6" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Confirm Password <span class="text-danger">*</span></label>
+                                        <input type="password" id="custConfirmPassword" class="form-control bg-light" placeholder="Re-type password" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+
+                                <div class="cash-pickup-notice mt-4 mb-4 small">
+                                    <i class="bi bi-shield-check text-success me-1"></i>
+                                    Customer accounts can immediately reserve fresh produce for cash-on-pickup at all weekend markets.
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow-sm">
+                                    Register as Customer
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Farmer Registration Form -->
+                        <div class="tab-pane fade" id="farmer-form-pane" role="tabpanel">
+                            <form id="farmerForm" novalidate onsubmit="handleFarmerRegister(event)">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Contact Person Name <span class="text-danger">*</span></label>
+                                        <input type="text" id="farmName" class="form-control bg-light" placeholder="e.g. Tariq Mehmood" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Stall / Farm Business Name <span class="text-danger">*</span></label>
+                                        <input type="text" id="farmStallName" class="form-control bg-light" placeholder="e.g. GreenValley Organics" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Stall Email <span class="text-danger">*</span></label>
+                                        <input type="email" id="farmEmail" class="form-control bg-light" placeholder="farmer@farm.com" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Contact Phone <span class="text-danger">*</span></label>
+                                        <input type="tel" id="farmPhone" class="form-control bg-light" placeholder="03331234567" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Primary Farmers Market <span class="text-danger">*</span></label>
+                                        <select id="farmMarketSelect" class="form-select bg-light" required>
+                                            <option value="">-- Choose Market --</option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Operating Days <span class="text-danger">*</span></label>
+                                        <input type="text" id="farmDays" class="form-control bg-light" value="Friday, Saturday" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small fw-bold text-dark">Farm / Orchard Location Address <span class="text-danger">*</span></label>
+                                        <input type="text" id="farmAddress" class="form-control bg-light" placeholder="Farm location address (min 8 chars)" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small fw-bold text-dark">Short Bio / Agricultural Specialty</label>
+                                        <textarea id="farmBio" rows="2" class="form-control bg-light" placeholder="e.g. 100% organic leafy greens, stoneground flours, fresh raw honey..."></textarea>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Password <span class="text-danger">*</span></label>
+                                        <input type="password" id="farmPassword" class="form-control bg-light" placeholder="Min 6 characters" minlength="6" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold text-dark">Confirm Password <span class="text-danger">*</span></label>
+                                        <input type="password" id="farmConfirmPassword" class="form-control bg-light" placeholder="Re-type password" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+
+                                <div class="cash-pickup-notice mt-4 mb-4 small">
+                                    <i class="bi bi-info-circle text-success me-1"></i>
+                                    New stalls are reviewed and approved. You will have full access to add products, set weekly stock, and configure pickup slots.
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow-sm">
+                                    Register Farm Stall
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4 pt-3 border-top small text-muted">
+                        Already have an account? <a href="login.html" class="fw-bold text-success">Sign In Here</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Footer -->
+    <footer id="main-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/demo-data.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/chatbot.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            App.renderNavbar('register');
+            App.renderFooter();
+
+            // Populate markets in farmer form
+            const markets = await DB.getMarkets();
+            const select = document.getElementById('farmMarketSelect');
+            markets.forEach(m => {
+                select.innerHTML += `<option value="${m.id}">${m.name}</option>`;
+            });
+
+            // Check URL param ?role=farmer
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('role') === 'farmer') {
+                const farmerTab = document.getElementById('farmer-tab');
+                if (farmerTab) bootstrap.Tab.getOrCreateInstance(farmerTab).show();
+            }
+
+            // Real-time blur validation for Customer form
+            const custName = document.getElementById('custName');
+            const custPhone = document.getElementById('custPhone');
+            const custEmail = document.getElementById('custEmail');
+            const custAddress = document.getElementById('custAddress');
+            const custPass = document.getElementById('custPassword');
+            const custConfirm = document.getElementById('custConfirmPassword');
+
+            custName.addEventListener('blur', () => {
+                Validator.markField(custName, Validator.isValidName(custName.value), 'Name must be at least 3 letters without special characters.');
+            });
+            custPhone.addEventListener('blur', () => {
+                Validator.markField(custPhone, Validator.isValidPhone(custPhone.value), 'Enter a valid Pakistani phone number (e.g. 03001234567 or +92 300 1234567).');
+            });
+            custEmail.addEventListener('blur', () => {
+                Validator.markField(custEmail, Validator.isValidEmail(custEmail.value), 'Please enter a valid email address.');
+            });
+            custAddress.addEventListener('blur', () => {
+                Validator.markField(custAddress, custAddress.value.trim().length >= 8, 'Please enter a detailed residential address (min 8 chars).');
+            });
+            custPass.addEventListener('blur', () => {
+                Validator.markField(custPass, Validator.isValidPassword(custPass.value, 6), 'Password must be at least 6 characters long.');
+            });
+            custConfirm.addEventListener('blur', () => {
+                Validator.markField(custConfirm, custConfirm.value === custPass.value && custConfirm.value.length > 0, 'Passwords do not match.');
+            });
+        });
+
+        async function handleCustomerRegister(e) {
+            e.preventDefault();
+            const nameEl = document.getElementById('custName');
+            const phoneEl = document.getElementById('custPhone');
+            const emailEl = document.getElementById('custEmail');
+            const addressEl = document.getElementById('custAddress');
+            const passEl = document.getElementById('custPassword');
+            const confirmEl = document.getElementById('custConfirmPassword');
+
+            const isNameValid = Validator.markField(nameEl, Validator.isValidName(nameEl.value), 'Name must be at least 3 letters without special characters.');
+            const isPhoneValid = Validator.markField(phoneEl, Validator.isValidPhone(phoneEl.value), 'Enter a valid Pakistani phone number (e.g. 03001234567 or +92 300 1234567).');
+            const isEmailValid = Validator.markField(emailEl, Validator.isValidEmail(emailEl.value), 'Please enter a valid email address.');
+            const isAddressValid = Validator.markField(addressEl, addressEl.value.trim().length >= 8, 'Please enter a detailed residential address (min 8 chars).');
+            const isPassValid = Validator.markField(passEl, Validator.isValidPassword(passEl.value, 6), 'Password must be at least 6 characters long.');
+            const isConfirmValid = Validator.markField(confirmEl, confirmEl.value === passEl.value && confirmEl.value.length > 0, 'Passwords do not match.');
+
+            if (!isNameValid || !isPhoneValid || !isEmailValid || !isAddressValid || !isPassValid || !isConfirmValid) {
+                App.showToast('Please fix the highlighted errors before submitting.', 'error');
+                return;
+            }
+
+            const res = await Auth.registerCustomer({
+                name: nameEl.value.trim(),
+                phone: phoneEl.value.trim(),
+                email: emailEl.value.trim(),
+                address: addressEl.value.trim(),
+                password: passEl.value
+            });
+
+            if (res.success) {
+                App.showToast(`Account created for ${res.user.name}! Redirecting...`, 'success');
+                setTimeout(() => {
+                    const targetUrl = sessionStorage.getItem('ml_auth_redirect');
+                    if (targetUrl) {
+                        sessionStorage.removeItem('ml_auth_redirect');
+                        window.location.href = targetUrl;
+                    } else {
+                        window.location.href = res.redirect;
+                    }
+                }, 800);
+            } else {
+                App.showToast(res.message, 'error');
+                Validator.markField(emailEl, false, res.message);
+            }
+        }
+
+        async function handleFarmerRegister(e) {
+            e.preventDefault();
+            const nameEl = document.getElementById('farmName');
+            const stallEl = document.getElementById('farmStallName');
+            const emailEl = document.getElementById('farmEmail');
+            const phoneEl = document.getElementById('farmPhone');
+            const marketEl = document.getElementById('farmMarketSelect');
+            const daysEl = document.getElementById('farmDays');
+            const addressEl = document.getElementById('farmAddress');
+            const passEl = document.getElementById('farmPassword');
+            const confirmEl = document.getElementById('farmConfirmPassword');
+
+            const isNameValid = Validator.markField(nameEl, Validator.isValidName(nameEl.value), 'Please enter a valid contact person name (min 3 chars).');
+            const isStallValid = Validator.markField(stallEl, stallEl.value.trim().length >= 3, 'Stall name must be at least 3 characters.');
+            const isEmailValid = Validator.markField(emailEl, Validator.isValidEmail(emailEl.value), 'Please enter a valid email address.');
+            const isPhoneValid = Validator.markField(phoneEl, Validator.isValidPhone(phoneEl.value), 'Enter a valid Pakistani phone number (e.g. 03331234567).');
+            const isMarketValid = Validator.markField(marketEl, marketEl.value !== '', 'Please select a primary farmers market.');
+            const isDaysValid = Validator.markField(daysEl, daysEl.value.trim().length >= 3, 'Please specify operating days (e.g. Friday, Saturday).');
+            const isAddressValid = Validator.markField(addressEl, addressEl.value.trim().length >= 8, 'Please enter a valid farm address (min 8 chars).');
+            const isPassValid = Validator.markField(passEl, Validator.isValidPassword(passEl.value, 6), 'Password must be at least 6 characters long.');
+            const isConfirmValid = Validator.markField(confirmEl, confirmEl.value === passEl.value && confirmEl.value.length > 0, 'Passwords do not match.');
+
+            if (!isNameValid || !isStallValid || !isEmailValid || !isPhoneValid || !isMarketValid || !isDaysValid || !isAddressValid || !isPassValid || !isConfirmValid) {
+                App.showToast('Please fix all highlighted errors in the stall form.', 'error');
+                return;
+            }
+
+            const res = await Auth.registerFarmer({
+                name: nameEl.value.trim(),
+                stall_name: stallEl.value.trim(),
+                email: emailEl.value.trim(),
+                phone: phoneEl.value.trim(),
+                market_id: marketEl.value,
+                operating_days: daysEl.value.trim(),
+                address: addressEl.value.trim(),
+                bio: document.getElementById('farmBio').value.trim()
+            });
+
+            if (res.success) {
+                App.showToast(`Stall "${res.user.stall_name}" registered! Redirecting to Farmer Dashboard...`, 'success');
+                setTimeout(() => window.location.href = res.redirect, 800);
+            } else {
+                App.showToast(res.message, 'error');
+                Validator.markField(emailEl, false, res.message);
+            }
+        }
+    </script>
+</body>
+</html>
