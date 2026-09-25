@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Dashboard | MarketLink – eGreen Basket</title>
+    <meta name="description" content="Central administrative platform control: metrics, customer accounts, farmers, and markets.">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-light">
+
+    <!-- Main Navigation Bar -->
+    <header id="main-navbar"></header>
+
+    <div class="container-fluid py-4">
+        <div class="row g-4">
+            <!-- Admin Sidebar -->
+            <div class="col-lg-3 col-md-4">
+                <div class="card p-3 shadow-sm border-0 sticky-top" style="top: 90px; border-radius: 16px;">
+                    <div class="text-center p-3 border-bottom mb-3">
+                        <div class="bg-dark text-white rounded-circle mx-auto d-flex align-items-center justify-content-center mb-2" style="width: 58px; height: 58px; font-size: 1.5rem; font-weight: bold;">
+                            <i class="bi bi-shield-lock-fill"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-0">Platform Admin</h6>
+                        <small class="badge bg-danger-subtle text-danger border border-danger-subtle">Super Administrator</small>
+                    </div>
+
+                    <nav class="sidebar d-flex flex-column p-0">
+                        <a href="dashboard.html" class="nav-link active">
+                            <i class="bi bi-speedometer2"></i> Dashboard Overview
+                        </a>
+                        <a href="users.html" class="nav-link">
+                            <i class="bi bi-people"></i> Customer Accounts
+                        </a>
+                        <a href="farmers.html" class="nav-link">
+                            <i class="bi bi-shop"></i> Farmer Approvals
+                        </a>
+                        <a href="markets.html" class="nav-link">
+                            <i class="bi bi-geo-alt"></i> Market Locations (CRUD)
+                        </a>
+                        <a href="products.html" class="nav-link">
+                            <i class="bi bi-basket"></i> Product Moderation
+                        </a>
+                        <a href="reviews.html" class="nav-link">
+                            <i class="bi bi-star"></i> Review Moderation
+                        </a>
+                        <a href="reports.html" class="nav-link">
+                            <i class="bi bi-graph-up"></i> Reports & Insights
+                        </a>
+                        <hr class="my-2 text-muted">
+                        <button onclick="Auth.logout()" class="nav-link text-danger border-0 bg-transparent text-start w-100">
+                            <i class="bi bi-box-arrow-right text-danger"></i> Sign Out
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Admin Main Content -->
+            <div class="col-lg-9 col-md-8">
+                <!-- Welcome Banner -->
+                <div class="card p-4 border-0 shadow-sm mb-4 text-white" style="background: linear-gradient(135deg, #1f2937 0%, #111827 100%); border-radius: 16px;">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                        <div>
+                            <span class="badge bg-warning text-dark px-3 py-1 mb-2">Central Control Panel</span>
+                            <h2 class="fw-bold mb-1">MarketLink Platform Overview</h2>
+                            <p class="mb-0 text-white-50">Oversee customer accounts, farmer stall applications, and market schedules.</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="markets.html" class="btn btn-primary btn-sm">
+                                <i class="bi bi-plus-circle me-1"></i> Add Market
+                            </a>
+                            <a href="reports.html" class="btn btn-outline-light btn-sm">
+                                View Analytics
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6 Metric Cards -->
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value" id="stat-admin-customers">0</div>
+                                <div class="stat-label">Total Customers</div>
+                            </div>
+                            <div class="stat-icon bg-info-subtle text-info">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value" id="stat-admin-farmers">0</div>
+                                <div class="stat-label">Total Farmers</div>
+                            </div>
+                            <div class="stat-icon bg-success-subtle text-success">
+                                <i class="bi bi-shop"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value" id="stat-admin-markets">0</div>
+                                <div class="stat-label">Active Markets</div>
+                            </div>
+                            <div class="stat-icon bg-primary-subtle text-primary">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value" id="stat-admin-products">0</div>
+                                <div class="stat-label">Total Products</div>
+                            </div>
+                            <div class="stat-icon bg-warning-subtle text-warning">
+                                <i class="bi bi-basket3-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value" id="stat-admin-orders">0</div>
+                                <div class="stat-label">Total Pre-Orders</div>
+                            </div>
+                            <div class="stat-icon bg-danger-subtle text-danger">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value text-success" id="stat-admin-revenue">Rs. 0</div>
+                                <div class="stat-label">Total Platform Volume</div>
+                            </div>
+                            <div class="stat-icon bg-success-subtle text-success">
+                                <i class="bi bi-cash-stack"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity / Orders -->
+                <div class="card p-4 border-0 shadow-sm" style="border-radius: 16px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-dark mb-0">Platform-Wide Pre-Order Activity</h5>
+                        <a href="reports.html" class="btn btn-outline-primary btn-sm">Full Report</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr class="small text-muted">
+                                    <th>Order #</th>
+                                    <th>Customer</th>
+                                    <th>Farmer Stall</th>
+                                    <th>Market Location</th>
+                                    <th>Amount (PKR)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-recent-orders-tbody">
+                                <!-- Loaded dynamically via AdminPortal.initDashboard() -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Footer -->
+    <footer id="main-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/demo-data.js"></script>
+    <script src="../js/db.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/admin.js"></script>
+    <script src="../js/chatbot.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!Auth.requireAuth('admin')) return;
+            App.renderNavbar('dashboard');
+            App.renderFooter();
+            AdminPortal.initDashboard();
+        });
+    </script>
+</body>
+</html>

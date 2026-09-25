@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Favorites | MarketLink – eGreen Basket</title>
+    <meta name="description" content="View your saved farmers, favorite products, and preferred farmers markets.">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-light">
+
+    <!-- Main Navigation Bar -->
+    <header id="main-navbar"></header>
+
+    <div class="container-fluid py-4">
+        <div class="row g-4">
+            <!-- Sidebar -->
+            <div class="col-lg-3 col-md-4">
+                <div class="card p-3 shadow-sm border-0 sticky-top" style="top: 90px; border-radius: 16px;">
+                    <div class="text-center p-3 border-bottom mb-3">
+                        <div class="bg-success-subtle text-success rounded-circle mx-auto d-flex align-items-center justify-content-center mb-2" style="width: 58px; height: 58px; font-size: 1.4rem; font-weight: bold;">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-0" id="fav-sidebar-name">Customer</h6>
+                        <small class="text-muted" id="fav-sidebar-email">customer@marketlink.com</small>
+                    </div>
+
+                    <nav class="sidebar d-flex flex-column p-0">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="bi bi-speedometer2"></i> Overview
+                        </a>
+                        <a href="orders.html" class="nav-link">
+                            <i class="bi bi-clock-history"></i> My Pre-Orders
+                        </a>
+                        <a href="favorites.html" class="nav-link active">
+                            <i class="bi bi-heart"></i> Saved Favorites
+                        </a>
+                        <a href="profile.html" class="nav-link">
+                            <i class="bi bi-person-gear"></i> Profile & Address
+                        </a>
+                        <hr class="my-2 text-muted">
+                        <a href="../products.html" class="nav-link">
+                            <i class="bi bi-basket"></i> Browse Products
+                        </a>
+                        <a href="../cart.html" class="nav-link">
+                            <i class="bi bi-cart3"></i> My Basket
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Favorites Panel -->
+            <div class="col-lg-9 col-md-8">
+                <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 16px;">
+                    <h3 class="fw-bold text-dark mb-1">Your Saved Favorites</h3>
+                    <p class="text-muted small mb-4">Quick access to your preferred farmers, produce items, and markets.</p>
+
+                    <!-- Tabs: Farmers, Products, Markets -->
+                    <ul class="nav nav-pills mb-4 p-1 bg-light rounded-3" id="favTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold py-2" id="fav-farmers-tab" data-bs-toggle="pill" data-bs-target="#fav-farmers-pane" type="button">
+                                <i class="bi bi-shop me-1"></i> Favorite Farmers
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold py-2" id="fav-products-tab" data-bs-toggle="pill" data-bs-target="#fav-products-pane" type="button">
+                                <i class="bi bi-basket me-1"></i> Favorite Products
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold py-2" id="fav-markets-tab" data-bs-toggle="pill" data-bs-target="#fav-markets-pane" type="button">
+                                <i class="bi bi-geo-alt me-1"></i> Favorite Markets
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="favTabsContent">
+                        <!-- Farmers Tab -->
+                        <div class="tab-pane fade show active" id="fav-farmers-pane">
+                            <div class="row g-3" id="fav-farmers-list">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Products Tab -->
+                        <div class="tab-pane fade" id="fav-products-pane">
+                            <div class="row g-3" id="fav-products-list">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Markets Tab -->
+                        <div class="tab-pane fade" id="fav-markets-pane">
+                            <div class="row g-3" id="fav-markets-list">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Footer -->
+    <footer id="main-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/demo-data.js"></script>
+    <script src="../js/db.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/chatbot.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!Auth.requireAuth('customer')) return;
+            App.renderNavbar('dashboard');
+            App.renderFooter();
+
+            const user = Auth.getCurrentUser();
+            document.getElementById('fav-sidebar-name').textContent = user.name;
+            document.getElementById('fav-sidebar-email').textContent = user.email;
+
+            await loadAllFavorites();
+        });
+
+        async function loadAllFavorites() {
+            const user = Auth.getCurrentUser();
+            const favorites = await DB.getFavorites(user.id);
+
+            const allFarmers = await DB.getFarmers();
+            const allProducts = await DB.getProducts();
+            const allMarkets = await DB.getMarkets();
+
+            // 1. Farmers
+            const farmerFavs = favorites.filter(f => f.item_type === 'farmer');
+            const farmersContainer = document.getElementById('fav-farmers-list');
+            if (farmerFavs.length === 0) {
+                farmersContainer.innerHTML = '<div class="col-12 py-4 text-center text-muted">No favorite farmers saved yet.</div>';
+            } else {
+                let html = '';
+                farmerFavs.forEach(fav => {
+                    const farm = allFarmers.find(f => f.id === fav.item_id);
+                    if (farm) {
+                        html += `
+                        <div class="col-md-6">
+                            <div class="card p-3 border shadow-sm h-100">
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="${farm.image_url}" class="rounded-circle shadow-sm" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-bold mb-0 text-dark">${farm.stall_name}</h6>
+                                        <small class="text-muted">${farm.farmer_name} | ${farm.operating_days}</small>
+                                    </div>
+                                    <button class="btn btn-sm text-danger p-0" onclick="removeFavorite('${farm.id}', 'farmer')" title="Remove">
+                                        <i class="bi bi-trash fs-5"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center">
+                                    <div>${App.renderStars(farm.rating)}</div>
+                                    <a href="../farmer-profile.html?id=${farm.id}" class="btn btn-outline-primary btn-sm py-1 px-3">
+                                        View Stall
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    }
+                });
+                farmersContainer.innerHTML = html;
+            }
+
+            // 2. Products
+            const prodFavs = favorites.filter(f => f.item_type === 'product');
+            const prodContainer = document.getElementById('fav-products-list');
+            if (prodFavs.length === 0) {
+                prodContainer.innerHTML = '<div class="col-12 py-4 text-center text-muted">No favorite products saved yet.</div>';
+            } else {
+                let html = '';
+                prodFavs.forEach(fav => {
+                    const prod = allProducts.find(p => p.id === fav.item_id);
+                    if (prod) {
+                        html += `
+                        <div class="col-md-6">
+                            <div class="card p-3 border shadow-sm h-100">
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="${prod.image_url}" class="rounded-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-bold mb-0 text-dark">${prod.name}</h6>
+                                        <span class="text-success fw-bold">${App.formatCurrency(prod.price)} / ${prod.unit}</span>
+                                    </div>
+                                    <button class="btn btn-sm text-danger p-0" onclick="removeFavorite('${prod.id}', 'product')" title="Remove">
+                                        <i class="bi bi-trash fs-5"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">${prod.stock_quantity} in stock</small>
+                                    <button class="btn btn-primary btn-sm py-1 px-3" onclick="Cart.addItem('${prod.id}', 1)">
+                                        <i class="bi bi-cart-plus me-1"></i> Add to Basket
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    }
+                });
+                prodContainer.innerHTML = html;
+            }
+
+            // 3. Markets
+            const mktFavs = favorites.filter(f => f.item_type === 'market');
+            const mktContainer = document.getElementById('fav-markets-list');
+            if (mktFavs.length === 0) {
+                mktContainer.innerHTML = '<div class="col-12 py-4 text-center text-muted">No favorite markets saved yet.</div>';
+            } else {
+                let html = '';
+                mktFavs.forEach(fav => {
+                    const mkt = allMarkets.find(m => m.id === fav.item_id);
+                    if (mkt) {
+                        html += `
+                        <div class="col-md-6">
+                            <div class="card p-3 border shadow-sm h-100">
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="${mkt.image_url}" class="rounded-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-bold mb-0 text-dark">${mkt.name}</h6>
+                                        <small class="text-muted">${mkt.operating_days} (${mkt.opening_time} - ${mkt.closing_time})</small>
+                                    </div>
+                                    <button class="btn btn-sm text-danger p-0" onclick="removeFavorite('${mkt.id}', 'market')" title="Remove">
+                                        <i class="bi bi-trash fs-5"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-3 pt-2 border-top text-end">
+                                    <a href="../farmers.html?market=${mkt.id}" class="btn btn-outline-primary btn-sm py-1 px-3">
+                                        Browse Farmers
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    }
+                });
+                mktContainer.innerHTML = html;
+            }
+        }
+
+        async function removeFavorite(itemId, itemType) {
+            const user = Auth.getCurrentUser();
+            await DB.toggleFavorite(user.id, itemType, itemId);
+            App.showToast('Removed from favorites.', 'info');
+            await loadAllFavorites();
+        }
+    </script>
+</body>
+</html>

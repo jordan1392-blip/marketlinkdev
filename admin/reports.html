@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics | Admin – MarketLink</title>
+    <meta name="description" content="Platform analytics: revenue summary, total pre-orders, popular products, and market-by-market breakdown.">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-light">
+
+    <!-- Main Navigation Bar -->
+    <header id="main-navbar"></header>
+
+    <div class="container-fluid py-4">
+        <div class="row g-4">
+            <!-- Admin Sidebar -->
+            <div class="col-lg-3 col-md-4">
+                <div class="card p-3 shadow-sm border-0 sticky-top" style="top: 90px; border-radius: 16px;">
+                    <div class="text-center p-3 border-bottom mb-3">
+                        <div class="bg-dark text-white rounded-circle mx-auto d-flex align-items-center justify-content-center mb-2" style="width: 58px; height: 58px; font-size: 1.5rem; font-weight: bold;">
+                            <i class="bi bi-shield-lock-fill"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-0">Platform Admin</h6>
+                        <small class="badge bg-danger-subtle text-danger border border-danger-subtle">Super Administrator</small>
+                    </div>
+
+                    <nav class="sidebar d-flex flex-column p-0">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="bi bi-speedometer2"></i> Dashboard Overview
+                        </a>
+                        <a href="users.html" class="nav-link">
+                            <i class="bi bi-people"></i> Customer Accounts
+                        </a>
+                        <a href="farmers.html" class="nav-link">
+                            <i class="bi bi-shop"></i> Farmer Approvals
+                        </a>
+                        <a href="markets.html" class="nav-link">
+                            <i class="bi bi-geo-alt"></i> Market Locations (CRUD)
+                        </a>
+                        <a href="products.html" class="nav-link">
+                            <i class="bi bi-basket"></i> Product Moderation
+                        </a>
+                        <a href="reviews.html" class="nav-link">
+                            <i class="bi bi-star"></i> Review Moderation
+                        </a>
+                        <a href="reports.html" class="nav-link active">
+                            <i class="bi bi-graph-up"></i> Reports & Insights
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Reports Content -->
+            <div class="col-lg-9 col-md-8">
+                <!-- Summary Metrics Banner -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value text-success" id="report-revenue">Rs. 0</div>
+                                <div class="stat-label">Total Platform Volume</div>
+                            </div>
+                            <div class="stat-icon bg-success-subtle text-success">
+                                <i class="bi bi-cash-stack"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value text-primary" id="report-orders">0</div>
+                                <div class="stat-label">Pre-Orders Processed</div>
+                            </div>
+                            <div class="stat-icon bg-primary-subtle text-primary">
+                                <i class="bi bi-bag-check-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value text-warning" id="report-farmers">0</div>
+                                <div class="stat-label">Active Registered Farms</div>
+                            </div>
+                            <div class="stat-icon bg-warning-subtle text-warning">
+                                <i class="bi bi-shop"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Top Demand Products -->
+                    <div class="col-lg-6">
+                        <div class="card p-4 border-0 shadow-sm h-100" style="border-radius: 16px;">
+                            <h5 class="fw-bold text-dark mb-3">Popular Farm Harvest Items</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr class="small text-muted">
+                                            <th>Rank</th>
+                                            <th>Product Name</th>
+                                            <th>Price (PKR)</th>
+                                            <th>Available</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-top-products-tbody">
+                                        <!-- Loaded dynamically via AdminPortal.initReports() -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Market Performance Breakdown -->
+                    <div class="col-lg-6">
+                        <div class="card p-4 border-0 shadow-sm h-100" style="border-radius: 16px;">
+                            <h5 class="fw-bold text-dark mb-3">Market Performance Breakdown</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr class="small text-muted">
+                                            <th>Market</th>
+                                            <th>Schedule</th>
+                                            <th>Reservations</th>
+                                            <th>Total Turnout</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-market-breakdown-tbody">
+                                        <!-- Loaded dynamically via AdminPortal.initReports() -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Footer -->
+    <footer id="main-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/demo-data.js"></script>
+    <script src="../js/db.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/admin.js"></script>
+    <script src="../js/chatbot.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!Auth.requireAuth('admin')) return;
+            App.renderNavbar('dashboard');
+            App.renderFooter();
+            AdminPortal.initReports();
+        });
+    </script>
+</body>
+</html>

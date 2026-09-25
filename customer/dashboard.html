@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard | MarketLink – eGreen Basket</title>
+    <meta name="description" content="View active pre-orders, pickup dates, favorite farmers, and account settings.">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-light">
+
+    <!-- Main Navigation Bar -->
+    <header id="main-navbar"></header>
+
+    <div class="container-fluid py-4">
+        <div class="row g-4">
+            <!-- Customer Sidebar -->
+            <div class="col-lg-3 col-md-4">
+                <div class="card p-3 shadow-sm border-0 sticky-top" style="top: 90px; border-radius: 16px;">
+                    <div class="text-center p-3 border-bottom mb-3">
+                        <div class="bg-success-subtle text-success rounded-circle mx-auto d-flex align-items-center justify-content-center mb-2" style="width: 64px; height: 64px; font-size: 1.5rem; font-weight: bold;">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark mb-0" id="dash-user-name">Customer</h5>
+                        <small class="text-muted" id="dash-user-email">customer@marketlink.com</small>
+                    </div>
+
+                    <nav class="sidebar d-flex flex-column p-0">
+                        <a href="dashboard.html" class="nav-link active">
+                            <i class="bi bi-speedometer2"></i> Overview
+                        </a>
+                        <a href="orders.html" class="nav-link">
+                            <i class="bi bi-clock-history"></i> My Pre-Orders
+                        </a>
+                        <a href="favorites.html" class="nav-link">
+                            <i class="bi bi-heart"></i> Saved Favorites
+                        </a>
+                        <a href="profile.html" class="nav-link">
+                            <i class="bi bi-person-gear"></i> Profile & Address
+                        </a>
+                        <hr class="my-2 text-muted">
+                        <a href="../markets.html" class="nav-link">
+                            <i class="bi bi-geo-alt"></i> Browse Markets
+                        </a>
+                        <a href="../farmers.html" class="nav-link">
+                            <i class="bi bi-shop"></i> Browse Farmers
+                        </a>
+                        <a href="../products.html" class="nav-link">
+                            <i class="bi bi-basket"></i> Browse Products
+                        </a>
+                        <a href="../cart.html" class="nav-link">
+                            <i class="bi bi-cart3"></i> My Basket
+                        </a>
+                        <hr class="my-2 text-muted">
+                        <button onclick="Auth.logout()" class="nav-link text-danger border-0 bg-transparent text-start w-100">
+                            <i class="bi bi-box-arrow-right text-danger"></i> Sign Out
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Customer Dashboard Main Panel -->
+            <div class="col-lg-9 col-md-8">
+                <!-- Welcome Banner -->
+                <div class="card p-4 border-0 shadow-sm mb-4 text-white" style="background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%); border-radius: 16px;">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <span class="badge bg-success-subtle text-success px-3 py-1 mb-2">Customer Portal</span>
+                            <h2 class="fw-bold mb-2">Welcome Back, <span id="welcome-name">Friend</span>!</h2>
+                            <p class="mb-0 text-white-50">
+                                Track your upcoming market pickups, examine weekly stock, or explore new organic farmers stalls.
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <a href="../products.html" class="btn btn-light text-success fw-bold px-3 shadow-sm">
+                                <i class="bi bi-basket me-1"></i> Order Produce
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Metric Cards -->
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value" id="kpi-active-orders">0</div>
+                                <div class="stat-label">Active Orders</div>
+                            </div>
+                            <div class="stat-icon bg-warning-subtle text-warning">
+                                <i class="bi bi-hourglass-split"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value" id="kpi-completed-orders">0</div>
+                                <div class="stat-label">Pickups Done</div>
+                            </div>
+                            <div class="stat-icon bg-success-subtle text-success">
+                                <i class="bi bi-bag-check-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value" id="kpi-total-spent">Rs. 0</div>
+                                <div class="stat-label">Total Spent</div>
+                            </div>
+                            <div class="stat-icon bg-primary-subtle text-primary">
+                                <i class="bi bi-cash-stack"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-value" id="kpi-favorites-count">0</div>
+                                <div class="stat-label">Saved Favorites</div>
+                            </div>
+                            <div class="stat-icon bg-danger-subtle text-danger">
+                                <i class="bi bi-heart-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Pickup Alert / Status -->
+                <div class="card p-4 border-0 shadow-sm mb-4" id="active-pickup-card" style="border-radius: 16px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0 text-dark">
+                            <i class="bi bi-bell-fill text-success me-2"></i> Upcoming Market Pickup
+                        </h5>
+                        <a href="orders.html" class="btn btn-outline-primary btn-sm">View All Orders</a>
+                    </div>
+                    <div id="active-pickup-content">
+                        <!-- Injected dynamically -->
+                    </div>
+                </div>
+
+                <!-- Recent Orders Table -->
+                <div class="card p-4 border-0 shadow-sm" style="border-radius: 16px;">
+                    <h5 class="fw-bold mb-3 text-dark">Recent Pre-Orders</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr class="small text-muted">
+                                    <th>Order ID</th>
+                                    <th>Farmer Stall</th>
+                                    <th>Pickup Date & Slot</th>
+                                    <th>Total Due</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cust-recent-orders-tbody">
+                                <!-- Injected dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Footer -->
+    <footer id="main-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/demo-data.js"></script>
+    <script src="../js/db.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/chatbot.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!Auth.requireAuth('customer')) return;
+            App.renderNavbar('dashboard');
+            App.renderFooter();
+
+            const user = Auth.getCurrentUser();
+            document.getElementById('dash-user-name').textContent = user.name;
+            document.getElementById('dash-user-email').textContent = user.email;
+            document.getElementById('welcome-name').textContent = user.name.split(' ')[0];
+
+            // Load Metrics & Orders
+            const allOrders = await DB.getOrders();
+            const myOrders = allOrders.filter(o => o.customer_id === user.id || o.customer_name === user.name);
+
+            const activeOrders = myOrders.filter(o => o.status === 'Placed' || o.status === 'Accepted' || o.status === 'Ready for Pickup');
+            const completedOrders = myOrders.filter(o => o.status === 'Completed');
+            const totalSpent = completedOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
+
+            const favs = await DB.getFavorites(user.id);
+
+            document.getElementById('kpi-active-orders').textContent = activeOrders.length;
+            document.getElementById('kpi-completed-orders').textContent = completedOrders.length;
+            document.getElementById('kpi-total-spent').textContent = App.formatCurrency(totalSpent);
+            document.getElementById('kpi-favorites-count').textContent = favs.length;
+
+            // Render Active Order Banner
+            const activeCard = document.getElementById('active-pickup-content');
+            if (activeOrders.length > 0) {
+                const latest = activeOrders[0];
+                activeCard.innerHTML = `
+                    <div class="p-3 bg-light rounded-3 border">
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-7">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <h6 class="fw-bold text-dark mb-0">${latest.order_number}</h6>
+                                    ${App.getStatusBadge(latest.status)}
+                                </div>
+                                <p class="small text-muted mb-1">
+                                    <i class="bi bi-shop text-success me-1"></i> <strong>${latest.farmer_name}</strong> at <strong>${latest.market_name}</strong>
+                                </p>
+                                <p class="small text-dark mb-0">
+                                    <i class="bi bi-calendar3 text-primary me-1"></i> Pickup on <strong>${latest.pickup_date}</strong> (${latest.pickup_time})
+                                </p>
+                            </div>
+                            <div class="col-md-5 text-md-end">
+                                <div class="fs-5 fw-bold text-success mb-2">${App.formatCurrency(latest.total_amount)}</div>
+                                <span class="badge bg-light text-dark border p-2 small">
+                                    <i class="bi bi-wallet2 text-success me-1"></i> Pay Cash at Stall
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                activeCard.innerHTML = `
+                    <div class="text-center py-3 text-muted">
+                        <i class="bi bi-check-circle fs-3 text-success d-block mb-1"></i>
+                        You have no pending pickups. Explore this weekend's fresh harvest!
+                    </div>
+                `;
+            }
+
+            // Render Recent Orders Table
+            const tbody = document.getElementById('cust-recent-orders-tbody');
+            if (myOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No pre-orders placed yet.</td></tr>';
+            } else {
+                let html = '';
+                myOrders.slice(0, 5).forEach(o => {
+                    html += `
+                    <tr>
+                        <td class="fw-bold">${o.order_number}</td>
+                        <td>${o.farmer_name}</td>
+                        <td>${o.pickup_date} <small class="text-muted">(${o.pickup_time})</small></td>
+                        <td class="fw-bold text-success">${App.formatCurrency(o.total_amount)}</td>
+                        <td>${App.getStatusBadge(o.status)}</td>
+                        <td class="text-end">
+                            <a href="orders.html?id=${o.id}" class="btn btn-sm btn-outline-primary py-0 px-2">View</a>
+                        </td>
+                    </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+            }
+        });
+    </script>
+</body>
+</html>

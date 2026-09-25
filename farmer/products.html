@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Harvest & Products | MarketLink – eGreen Basket</title>
+    <meta name="description" content="Add, edit, and update weekly harvest produce stock and pricing for your farm stall.">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-light">
+
+    <!-- Main Navigation Bar -->
+    <header id="main-navbar"></header>
+
+    <div class="container-fluid py-4">
+        <div class="row g-4">
+            <!-- Sidebar -->
+            <div class="col-lg-3 col-md-4">
+                <div class="card p-3 shadow-sm border-0 sticky-top" style="top: 90px; border-radius: 16px;">
+                    <div class="text-center p-3 border-bottom mb-3">
+                        <div class="bg-success-subtle text-success rounded-circle mx-auto d-flex align-items-center justify-content-center mb-2" style="width: 58px; height: 58px; font-size: 1.5rem; font-weight: bold;">
+                            <i class="bi bi-shop"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-0">Farmer Portal</h6>
+                        <small class="text-muted">Stock Management</small>
+                    </div>
+
+                    <nav class="sidebar d-flex flex-column p-0">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="bi bi-speedometer2"></i> Dashboard Overview
+                        </a>
+                        <a href="products.html" class="nav-link active">
+                            <i class="bi bi-basket"></i> My Products & Stock
+                        </a>
+                        <a href="orders.html" class="nav-link">
+                            <i class="bi bi-bag-check"></i> Orders & Pickups
+                        </a>
+                        <a href="pickup-slots.html" class="nav-link">
+                            <i class="bi bi-calendar3"></i> Pickup Slots & Cutoff
+                        </a>
+                        <a href="profile.html" class="nav-link">
+                            <i class="bi bi-person-gear"></i> Stall Profile Settings
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Products Management Panel -->
+            <div class="col-lg-9 col-md-8">
+                <div class="card p-4 border-0 shadow-sm" style="border-radius: 16px;">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                        <div>
+                            <h3 class="fw-bold text-dark mb-1">Weekly Stock & Harvest Catalog</h3>
+                            <p class="text-muted small mb-0">Set your live quantities, pricing in PKR, and manage produce availability.</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="FarmerPortal.openAddProductModal()">
+                            <i class="bi bi-plus-circle me-1"></i> Add New Product
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr class="small text-muted">
+                                    <th>Image</th>
+                                    <th>Item Name</th>
+                                    <th>Category</th>
+                                    <th>Price (PKR)</th>
+                                    <th>Stock Qty</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="farmer-products-tbody">
+                                <!-- Loaded dynamically via FarmerPortal.initProducts() -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-bold text-dark" id="productModalTitle">Add New Harvest Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="productForm" novalidate onsubmit="validateAndSaveProduct(event)">
+                    <input type="hidden" id="productIdInput">
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-dark">Produce Name <span class="text-danger">*</span></label>
+                            <input type="text" id="prodNameInput" class="form-control" placeholder="e.g. Organic Desi Tomatoes" required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-dark">Category <span class="text-danger">*</span></label>
+                                <select id="prodCategorySelect" class="form-select" required>
+                                    <!-- Injected dynamically -->
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-dark">Unit <span class="text-danger">*</span></label>
+                                <select id="prodUnitInput" class="form-select" required>
+                                    <option value="kg">kg (Kilogram)</option>
+                                    <option value="dozen">dozen (12 items)</option>
+                                    <option value="liter">liter</option>
+                                    <option value="bundle">bundle</option>
+                                    <option value="box">box</option>
+                                    <option value="loaf">loaf</option>
+                                    <option value="pack">pack</option>
+                                    <option value="500g jar">500g jar</option>
+                                    <option value="piece">piece</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-dark">Price (PKR) <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rs.</span>
+                                    <input type="number" id="prodPriceInput" class="form-control" placeholder="180" min="1" step="1" required>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-dark">Available Stock Qty <span class="text-danger">*</span></label>
+                                <input type="number" id="prodStockInput" class="form-control" placeholder="40" min="0" required>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-dark">Product Image URL / Cloud Storage</label>
+                            <input type="url" id="prodImageInput" class="form-control" placeholder="https://images.unsplash.com/... or paste image URL">
+                            <small class="text-muted" style="font-size: 0.75rem;">Leave empty for standard agricultural default image.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-dark">Description</label>
+                            <textarea id="prodDescInput" rows="3" class="form-control" placeholder="Growing techniques, natural taste profile, harvesting details..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm px-3">Save Harvest Item</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Footer -->
+    <footer id="main-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/validation.js"></script>
+    <script src="../js/demo-data.js"></script>
+    <script src="../js/db.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/farmer.js"></script>
+    <script src="../js/chatbot.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!Auth.requireAuth('farmer')) return;
+            App.renderNavbar('dashboard');
+            App.renderFooter();
+            FarmerPortal.initProducts();
+        });
+
+        async function validateAndSaveProduct(e) {
+            e.preventDefault();
+            const nameEl = document.getElementById('prodNameInput');
+            const priceEl = document.getElementById('prodPriceInput');
+            const stockEl = document.getElementById('prodStockInput');
+
+            const isNameValid = Validator.markField(nameEl, nameEl.value.trim().length >= 3, 'Product name must be at least 3 characters.');
+            const isPriceValid = Validator.markField(priceEl, Validator.isPositiveNumber(priceEl.value), 'Price must be greater than zero.');
+            const isStockValid = Validator.markField(stockEl, Validator.isNonNegativeNumber(stockEl.value), 'Stock quantity cannot be negative.');
+
+            if (!isNameValid || !isPriceValid || !isStockValid) {
+                App.showToast('Please fix the highlighted product fields.', 'error');
+                return;
+            }
+
+            await FarmerPortal.saveProductForm(e);
+        }
+    </script>
+</body>
+</html>
